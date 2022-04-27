@@ -1,0 +1,79 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+model Confirmation {
+  id           Int                   @id @default(autoincrement())
+  name         String
+  presence     Confirmation_presence @default(TIDAK)
+  wish         String?
+  invitationId Int
+  isActive     Boolean               @default(true)
+}
+
+model Gallery {
+  id           Int     @id @default(autoincrement())
+  photoName    String
+  photoUrl     String
+  invitationId Int
+  isActive     Boolean @default(true)
+}
+
+model Invitation {
+  id                 Int                       @id @default(autoincrement())
+  invitationId       String                    @unique
+  invitationType     Invitation_invitationType
+  nameMale           String
+  nameFemale         String
+  completeNameMale   String?
+  completeNameFemale String?
+  isFemaleFirst      Boolean                   @default(true)
+  parentMale         String?
+  parentFemale       String?
+  dateAkad           DateTime?
+  dateResepsi        DateTime?
+  addAkad            String?                   @db.Text
+  addResepsi         String?                   @db.Text
+  mapsUrl            String?                   @db.Text
+  rekeningNumber     String?
+  musicUrl           String?                   @db.Text
+  liveStreamUrl      String?                   @db.Text
+  quotesArabic       String?                   @db.Text
+  quotesIndo         String?                   @db.Text
+  userId             Int                       @unique
+  isActive           Boolean                   @default(true)
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  username  String    @unique
+  password  String
+  telephone String
+  role      User_role @default(USER)
+  isActive  Int       @default(1)
+}
+
+enum Confirmation_presence {
+  HADIR
+  TIDAK
+}
+
+enum Invitation_invitationType {
+  SIMPEL
+  KASUAL
+  ELEGAN
+}
+
+enum User_role {
+  USER
+  ADMIN
+}
